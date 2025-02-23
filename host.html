@@ -56,6 +56,7 @@
             transform: scale(1.05);
         }
 
+        /* Host Event Specific Styles */
         .container {
             max-width: 800px;
             margin: 2rem auto;
@@ -75,6 +76,10 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
         label {
             display: block;
             margin-bottom: 0.5rem;
@@ -89,6 +94,31 @@
             background: rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 1rem;
+        }
+
+        /* Dropdown Styling */
+        select {
+            appearance: none; /* Remove default arrow */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            background-size: 1.2rem;
+        }
+
+        select option {
+            background: #333; /* Background color for dropdown options */
+            color: white; /* Font color for dropdown options */
+        }
+
+        select option:hover {
+            background: #6a11cb; /* Hover background color */
+            color: white; /* Hover font color */
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
 
         button {
@@ -115,20 +145,77 @@
             color: white;
             margin-top: 2rem;
         }
+
+        /* Custom Input for "Other" Option */
+        .custom-activity {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .custom-activity input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
     </style>
+
+<script>
+    async function saveEvent(event) {
+        event.preventDefault();
+
+        // Get form values
+        const eventData = {
+            title: document.getElementById("title").value,
+            date: document.getElementById("date").value,
+            time: document.getElementById("time").value,
+            location: document.getElementById("location").value,
+            sport: document.getElementById("sport").value,
+            participants: document.getElementById("participants").value,
+            contact: document.getElementById("contact").value,
+            description: document.getElementById("description").value
+        };
+
+        // Validation
+        if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
+            alert("Please enter a valid phone number or email.");
+            return;
+        }
+
+        // 🔴Google Apps Script URL
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbxONH4ZYOWajE22HZ1rS9Sf_RkkyHsxxaOclKUCDEhhJBrEDXgzzG-wjrfs8wMzhbsw/exec";
+
+        try {
+            const response = await fetch(scriptUrl, {
+                method: "POST",
+                body: JSON.stringify(eventData)
+            });
+
+            if (response.ok) {
+                alert("Event Created Successfully!");
+                window.location.href = "event1.html";
+            }
+        } catch (error) {
+            alert("Error saving event. Check your internet connection.");
+        }
+    }
+    </script>
 </head>
 <body>
     <header>
-        <nav>
-            <div class="logo">
-                <img src="https://github.com/atharvakadu1/ActiveSphere/blob/main/logo1.jpg?raw=true" alt="Active Sphere Logo">
-            </div>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="host.html">Host an Event</a></li>
-                <li><a href="event1.html">Find Events</a></li>
-            </ul>
-        </nav>
+      <nav>
+        <div class="logo">
+            <img src="https://github.com/atharvakadu1/ActiveSphere/blob/main/logo1.jpg?raw=true" alt="Active Sphere Logo">
+        </div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="host.html">Host an Event</a></li>
+            <li><a href="event1.html">Find Events</a></li>
+        </ul>
+    </nav>
     </header>
 
     <main class="container">
@@ -137,18 +224,18 @@
             <form onsubmit="saveEvent(event)">
                 <label for="title">Event Title</label>
                 <input type="text" id="title" required>
-
+        
                 <label for="date">Date</label>
                 <input type="date" id="date" required>
-
+        
                 <label for="time">Time</label>
                 <input type="time" id="time" required>
-
+        
                 <label for="location">Location</label>
                 <input type="text" id="location" required>
-
+                
                 <label for="sport">Sport/Activity</label>
-                <select id="sport" required>
+                <select id="sport" onchange="toggleCustomActivity()" required>
                     <option value="cycling">Cycling</option>
                     <option value="swimming">Swimming</option>
                     <option value="cricket">Cricket</option>
@@ -157,15 +244,20 @@
                     <option value="other">Other</option>
                 </select>
 
+                <div class="custom-activity">
+                    <label for="custom-activity">Specify Activity</label>
+                    <input type="text" id="custom-activity" placeholder="Enter your activity">
+                </div>
+        
                 <label for="participants">Maximum Participants</label>
                 <input type="number" id="participants" min="1" required>
 
                 <label for="contact">Contact Details (Phone or Email)</label>
                 <input type="text" id="contact" placeholder="e.g., +1234567890 or email@example.com" required>
-
+        
                 <label for="description">Description</label>
                 <textarea id="description" rows="4" required></textarea>
-
+        
                 <button type="submit">Create Event</button>
             </form>
         </div>
@@ -174,54 +266,5 @@
     <footer>
         <p>&copy; 2025 Active Sphere. All Rights Reserved.</p>
     </footer>
-
-    <script>
-        async function saveEvent(event) {
-            event.preventDefault();
-
-            const eventData = {
-                title: document.getElementById("title").value,
-                date: document.getElementById("date").value,
-                time: document.getElementById("time").value,
-                location: document.getElementById("location").value,
-                sport: document.getElementById("sport").value,
-                participants: document.getElementById("participants").value,
-                contact: document.getElementById("contact").value,
-                description: document.getElementById("description").value
-            };
-
-            // Save host identity in localStorage
-            localStorage.setItem("hostContact", eventData.contact);
-
-            // Add host contact to the event data
-            eventData.host = eventData.contact;
-
-            // Validation
-            if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
-                alert("Please enter a valid phone number or email.");
-                return;
-            }
-
-            // Google Apps Script URL
-            const scriptUrl = "https://script.google.com/macros/s/AKfycbxONH4ZYOWajE22HZ1rS9Sf_RkkyHsxxaOclKUCDEhhJBrEDXgzzG-wjrfs8wMzhbsw/exec";
-
-            try {
-                const response = await fetch(scriptUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(eventData)
-                });
-
-                if (response.ok) {
-                    alert("Event Created Successfully!");
-                    window.location.href = "event1.html";
-                } else {
-                    throw new Error("Failed to create event");
-                }
-            } catch (error) {
-                alert("Error saving event. Check your internet connection.");
-            }
-        }
-    </script>
 </body>
 </html>
