@@ -168,6 +168,22 @@
     </footer>
 
     <script>
+
+        function askUserIdentity() {
+    let user = localStorage.getItem("loggedInUser");
+
+    if (!user) {
+        user = prompt("Enter your name or email to manage your events:");
+        if (user) {
+            localStorage.setItem("loggedInUser", user);
+        }
+    }
+}
+
+// Call this function when the page loads
+askUserIdentity();
+
+        
       async function loadEvents() {
           const scriptUrl = "https://script.google.com/macros/s/AKfycbxONH4ZYOWajE22HZ1rS9Sf_RkkyHsxxaOclKUCDEhhJBrEDXgzzG-wjrfs8wMzhbsw/exec";
           const eventsGrid = document.querySelector(".events-grid");
