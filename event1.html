@@ -12,6 +12,24 @@
             background: #121212;
             color: #e0e0e0;
         }
+body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        background: linear-gradient(
+            rgba(18, 18, 18, 0.7),
+            rgba(18, 18, 18, 0.7)
+          ),
+          url("https://media.istockphoto.com/id/1491344667/vector/blue-and-pink-abstract-blurred-cloudy-background.jpg?s=612x612&w=0&k=20&c=vRM87uuHX90NTTLjUStIoso527ZZKACawl22VbpHoMY=");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+       
         
         header {
             background: #000;
