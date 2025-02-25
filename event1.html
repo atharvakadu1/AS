@@ -104,11 +104,12 @@ h1 {
     font-size: 1rem;
 }
 
-/* 📌 Events listed row-wise */
+/* 📌 Events in Row-Wise Layout */
 .events-grid {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center; /* Centering events in a row */
 }
 
 /* 🎯 Event Card Styling */
@@ -117,9 +118,11 @@ h1 {
     border-radius: 10px;
     padding: 1.5rem;
     transition: transform 0.3s ease;
+    width: 300px; /* Fixed width to ensure proper row alignment */
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    text-align: center;
 }
 
 .event-card:hover {
@@ -128,13 +131,14 @@ h1 {
 
 /* 🎯 Event Details */
 .event-details {
-    flex: 1;
+    width: 100%;
 }
 
 .event-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .sport-tag {
@@ -154,7 +158,8 @@ h1 {
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    margin-left: 1rem;
+    margin-top: 1rem;
+    width: 100%;
     transition: background 0.3s ease;
 }
 
