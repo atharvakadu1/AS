@@ -13,24 +13,6 @@
             background: #121212;
             color: #e0e0e0;
         }
-
-body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: -1;
-        background: linear-gradient(
-            rgba(18, 18, 18, 0.7),
-            rgba(18, 18, 18, 0.7)
-          ),
-          url("https://media.istockphoto.com/id/1491344667/vector/blue-and-pink-abstract-blurred-cloudy-background.jpg?s=612x612&w=0&k=20&c=vRM87uuHX90NTTLjUStIoso527ZZKACawl22VbpHoMY=");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-      }
         
         header {
             background: #000;
@@ -183,71 +165,57 @@ body::before {
 
 <script>
     async function saveEvent(event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    // Get form values
-    const eventData = {
-        action: "addEvent",  // Added action parameter
-        title: document.getElementById("title").value.trim(),
-        date: document.getElementById("date").value,
-        time: document.getElementById("time").value,
-        location: document.getElementById("location").value.trim(),
-        sport: document.getElementById("sport").value,
-        participants: document.getElementById("participants").value,
-        contact: document.getElementById("contact").value.trim(),
-        description: document.getElementById("description").value.trim()
-    };
+        // Get form values
+        const eventData = {
+            title: document.getElementById("title").value,
+            date: document.getElementById("date").value,
+            time: document.getElementById("time").value,
+            location: document.getElementById("location").value,
+            sport: document.getElementById("sport").value,
+            participants: document.getElementById("participants").value,
+            contact: document.getElementById("contact").value,
+            description: document.getElementById("description").value
+        };
 
-    // Validation
-    if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
-        alert("Please enter a valid phone number or email.");
-        return;
-    }
-
-    // Ensure "Other" sport is captured
-    if (eventData.sport === "other") {
-        const customActivity = document.getElementById("custom-activity").value.trim();
-        if (customActivity) {
-            eventData.sport = customActivity;
-        } else {
-            alert("Please enter a sport name.");
+        // Validation
+        if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
+            alert("Please enter a valid phone number or email.");
             return;
         }
-    }
 
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxltx_ma-hEnYXXb67Qe6JY1XjBsePlS5wG3lDLQctuV0R2mjG7t8ZCdUoB7oAt20FA/exec";
+        // 🔴Google Apps Script URL
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbxONH4ZYOWajE22HZ1rS9Sf_RkkyHsxxaOclKUCDEhhJBrEDXgzzG-wjrfs8wMzhbsw/exec";
 
-    try {
-        const response = await fetch(scriptUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(eventData)
-        });
+        try {
+            const response = await fetch(scriptUrl, {
+                method: "POST",
+                body: JSON.stringify(eventData)
+            });
 
-        const text = await response.text();
-        if (response.ok && text.includes("Event Added")) {
-            alert("Event Created Successfully!");
-            window.location.href = "event1.html";
-        } else {
-            throw new Error(text);
+            if (response.ok) {
+                alert("Event Created Successfully!");
+                window.location.href = "event1.html";
+            }
+        } catch (error) {
+            alert("Error saving event. Check your internet connection.");
         }
-    } catch (error) {
-        alert("Error saving event: " + error.message);
     }
-}
-
     </script>
 </head>
 <body>
     <header>
       <nav>
         <div class="logo">
-            <img src="https://github.com/atharvakadu1/ActiveSphere/blob/main/logo1.jpg?raw=true" alt="Active Sphere Logo">
+            <img src="pics/logo1.jpg" alt="Active Sphere Logo">
         </div>
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="host.html">Host an Event</a></li>
             <li><a href="event1.html">Find Events</a></li>
+            
+            <li><a href="profile1.html">Profile</a></li>
         </ul>
     </nav>
     </header>
