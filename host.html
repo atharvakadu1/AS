@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Host an Event - Active Sphere</title>
-        <style>
+    <style>
         /* Global Styles */
         body {
             font-family: Arial, sans-serif;
@@ -14,23 +14,23 @@
             color: #e0e0e0;
         }
 
-body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: -1;
-        background: linear-gradient(
-            rgba(18, 18, 18, 0.7),
-            rgba(18, 18, 18, 0.7)
-          ),
-          url("https://media.istockphoto.com/id/1491344667/vector/blue-and-pink-abstract-blurred-cloudy-background.jpg?s=612x612&w=0&k=20&c=vRM87uuHX90NTTLjUStIoso527ZZKACawl22VbpHoMY=");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-      }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background: linear-gradient(
+                rgba(18, 18, 18, 0.7),
+                rgba(18, 18, 18, 0.7)
+            ),
+            url("https://media.istockphoto.com/id/1491344667/vector/blue-and-pink-abstract-blurred-cloudy-background.jpg?s=612x612&w=0&k=20&c=vRM87uuHX90NTTLjUStIoso527ZZKACawl22VbpHoMY=");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
         
         header {
             background: #000;
@@ -114,25 +114,6 @@ body::before {
             font-size: 1rem;
         }
 
-        /* Dropdown Styling */
-        select {
-            appearance: none; /* Remove default arrow */
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.8rem center;
-            background-size: 1.2rem;
-        }
-
-        select option {
-            background: #333; /* Background color for dropdown options */
-            color: white; /* Font color for dropdown options */
-        }
-
-        select option:hover {
-            background: #6a11cb; /* Hover background color */
-            color: white; /* Hover font color */
-        }
-
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -181,59 +162,63 @@ body::before {
         }
     </style>
 
-<script>
-    async function saveEvent(event) {
-        event.preventDefault();
+    <script>
+        async function saveEvent(event) {
+            event.preventDefault();
 
-        // Get form values
-        const eventData = {
-            title: document.getElementById("title").value,
-            date: document.getElementById("date").value,
-            time: document.getElementById("time").value,
-            location: document.getElementById("location").value,
-            sport: document.getElementById("sport").value,
-            participants: document.getElementById("participants").value,
-            contact: document.getElementById("contact").value,
-            description: document.getElementById("description").value
-        };
+            // Get form values
+            const eventData = {
+                action: "addEvent", // ✅ Added action field
+                title: document.getElementById("title").value,
+                date: document.getElementById("date").value,
+                time: document.getElementById("time").value,
+                location: document.getElementById("location").value,
+                sport: document.getElementById("sport").value,
+                participants: document.getElementById("participants").value,
+                contact: document.getElementById("contact").value,
+                description: document.getElementById("description").value
+            };
 
-        // Validation
-        if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
-            alert("Please enter a valid phone number or email.");
-            return;
-        }
-
-        // 🔴Google Apps Script URL
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbxvc4a5Ut6XF7BGOTt_tARRQKPqaeEgq-S8LehZrT_QQerr5VRJYEoEHLUHTNRLY8D9/exec";
-
-        try {
-            const response = await fetch(scriptUrl, {
-                method: "POST",
-                body: JSON.stringify(eventData)
-            });
-
-            if (response.ok) {
-                alert("Event Created Successfully!");
-                window.location.href = "event1.html";
+            // Validation
+            if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
+                alert("Please enter a valid phone number or email.");
+                return;
             }
-        } catch (error) {
-            alert("Error saving event. Check your internet connection.");
+
+            // 🔴Google Apps Script URL
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbxvc4a5Ut6XF7BGOTt_tARRQKPqaeEgq-S8LehZrT_QQerr5VRJYEoEHLUHTNRLY8D9/exec";
+
+            try {
+                const response = await fetch(scriptUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }, // ✅ Added headers
+                    body: JSON.stringify(eventData)
+                });
+
+                if (response.ok) {
+                    alert("Event Created Successfully!");
+                    window.location.href = "event1.html";
+                } else {
+                    alert("Error saving event.");
+                }
+            } catch (error) {
+                alert("Error saving event. Check your internet connection.");
+            }
         }
-    }
     </script>
 </head>
 <body>
     <header>
-      <nav>
-        <div class="logo">
-            <img src="https://github.com/atharvakadu1/ActiveSphere/blob/main/logo1.jpg?raw=true" alt="Active Sphere Logo">
-        </div>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="host.html">Host an Event</a></li>
-            <li><a href="event1.html">Find Events</a></li>
-        </ul>
-    </nav>
+        <nav>
+            <div class="logo">
+                <img src="https://github.com/atharvakadu1/ActiveSphere/blob/main/logo1.jpg?raw=true" alt="Active Sphere Logo">
+            </div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="host.html">Host an Event</a></li>
+                <li><a href="event1.html">Find Events</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main class="container">
@@ -251,27 +236,12 @@ body::before {
         
                 <label for="location">Location</label>
                 <input type="text" id="location" required>
-                
-                <label for="sport">Sport/Activity</label>
-                <select id="sport" onchange="toggleCustomActivity()" required>
-                    <option value="cycling">Cycling</option>
-                    <option value="swimming">Swimming</option>
-                    <option value="cricket">Cricket</option>
-                    <option value="football">Football</option>
-                    <option value="basketball">Basketball</option>
-                    <option value="other">Other</option>
-                </select>
-
-                <div class="custom-activity">
-                    <label for="custom-activity">Specify Activity</label>
-                    <input type="text" id="custom-activity" placeholder="Enter your activity">
-                </div>
         
                 <label for="participants">Maximum Participants</label>
                 <input type="number" id="participants" min="1" required>
 
                 <label for="contact">Contact Details (Phone or Email)</label>
-                <input type="text" id="contact" placeholder="e.g., +1234567890 or email@example.com" required>
+                <input type="text" id="contact" required>
         
                 <label for="description">Description</label>
                 <textarea id="description" rows="4" required></textarea>
