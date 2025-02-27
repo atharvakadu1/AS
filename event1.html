@@ -104,21 +104,19 @@ h1 {
     font-size: 1rem;
 }
 
-/* 📌 Events in Row-Wise Layout */
 .events-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
-    justify-content: center; /* Centering events in a row */
+    justify-content: center;
 }
 
-/* 🎯 Event Card Styling */
 .event-card {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     padding: 1.5rem;
     transition: transform 0.3s ease;
-    width: 300px; /* Fixed width to ensure proper row alignment */
+    width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -129,7 +127,6 @@ h1 {
     transform: translateY(-3px);
 }
 
-/* 🎯 Event Details */
 .event-details {
     width: 100%;
 }
@@ -150,8 +147,7 @@ h1 {
     font-weight: bold;
 }
 
-/* 📌 Buttons */
-.join-button, .remove-button {
+.join-button {
     padding: 0.75rem 1rem;
     border: none;
     border-radius: 5px;
@@ -161,9 +157,6 @@ h1 {
     margin-top: 1rem;
     width: 100%;
     transition: background 0.3s ease;
-}
-
-.join-button {
     background: #6a11cb;
     color: white;
 }
@@ -172,16 +165,6 @@ h1 {
     background: #2575fc;
 }
 
-.remove-button {
-    background: #d9534f;
-    color: white;
-}
-
-.remove-button:hover {
-    background: #c9302c;
-}
-
-/* 📌 Fix Footer at Bottom */
 footer {
     text-align: center;
     padding: 2rem;
@@ -189,7 +172,6 @@ footer {
     color: white;
     margin-top: auto;
 }
-
     </style>
 </head>
 <body>
@@ -208,7 +190,6 @@ footer {
 
     <main class="container">
         <h1>Find Events</h1>
-
         <div class="events-grid"></div>
     </main>
 
@@ -217,51 +198,31 @@ footer {
     </footer>
 
     <script>
-
-        function askUserIdentity() {
-    let user = localStorage.getItem("loggedInUser");
-
-    if (!user) {
-        user = prompt("Enter your name or email to manage your events:");
-        if (user) {
-            localStorage.setItem("loggedInUser", user);
-        }
-    }
-}
-
-// Call this function when the page loads
-askUserIdentity();
-
-        
       async function loadEvents() {
           const scriptUrl = "https://script.google.com/macros/s/AKfycbx4X-I-ZHJ2GVkD7d5CcJrobPyDODFraJKc9XIkGYpyRCeDVHRXHV5O95_3jW5Pb9uT/exec";
           const eventsGrid = document.querySelector(".events-grid");
-          const removedEvents = JSON.parse(localStorage.getItem("removedEvents")) || [];
   
           try {
               const response = await fetch(scriptUrl);
               const events = await response.json();
               
-              eventsGrid.innerHTML = events
-                  .filter(event => !removedEvents.includes(event.title))
-                  .map(event => `
-                      <div class="event-card">
-                          <div class="event-header">
-                              <h2 class="event-title">${event.title}</h2>
-                              <span class="sport-tag">${event.sport}</span>
-                          </div>
-                          <div class="event-details">
-                              <p><strong>Date:</strong> ${event.date}</p>
-                              <p><strong>Time:</strong> ${event.time}</p>
-                              <p><strong>Location:</strong> ${event.location}</p>
-                              <p><strong>Spots:</strong> ${event.participants}</p>
-                              <p><strong>Contact:</strong> ${event.contact}</p>
-                              <p><strong>Description:</strong> ${event.description}</p>
-                          </div>
-                          <button class="join-button" onclick="joinEvent()">Join Event</button>
-                          <button class="remove-button" onclick="removeEvent(this, '${event.title}')">Remove Event</button>
+              eventsGrid.innerHTML = events.map(event => `
+                  <div class="event-card">
+                      <div class="event-header">
+                          <h2 class="event-title">${event.title}</h2>
+                          <span class="sport-tag">${event.sport}</span>
                       </div>
-                  `).join("");
+                      <div class="event-details">
+                          <p><strong>Date:</strong> ${event.date}</p>
+                          <p><strong>Time:</strong> ${event.time}</p>
+                          <p><strong>Location:</strong> ${event.location}</p>
+                          <p><strong>Spots:</strong> ${event.participants}</p>
+                          <p><strong>Contact:</strong> ${event.contact}</p>
+                          <p><strong>Description:</strong> ${event.description}</p>
+                      </div>
+                      <button class="join-button" onclick="joinEvent()">Join Event</button>
+                  </div>
+              `).join("");
               
           } catch (error) {
               eventsGrid.innerHTML = "Failed to load events.";
@@ -269,15 +230,7 @@ askUserIdentity();
       }
 
       function joinEvent() {
-    window.open("https://chat.whatsapp.com/JACrnM0SZFTBtfz1oBK18H", "_blank");
-}
-
-      
-      function removeEvent(button, title) {
-          const removedEvents = JSON.parse(localStorage.getItem("removedEvents")) || [];
-          removedEvents.push(title);
-          localStorage.setItem("removedEvents", JSON.stringify(removedEvents));
-          button.parentElement.remove();
+          window.open("https://chat.whatsapp.com/JACrnM0SZFTBtfz1oBK18H", "_blank");
       }
       
       window.onload = loadEvents;
