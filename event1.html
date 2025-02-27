@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Events - Active Sphere</title>
+    <title>Find Events! - Active Sphere</title>
     <style>
         body {
     font-family: Arial, sans-serif;
@@ -244,7 +244,7 @@ askUserIdentity();
               
               eventsGrid.innerHTML = events
                   .filter(event => !removedEvents.includes(event.title))
-                  .map(event => `
+                  .map(event => 
                       <div class="event-card">
                           <div class="event-header">
                               <h2 class="event-title">${event.title}</h2>
@@ -259,9 +259,8 @@ askUserIdentity();
                               <p><strong>Description:</strong> ${event.description}</p>
                           </div>
                           <button class="join-button" onclick="joinEvent()">Join Event</button>
-                          <button class="remove-button" onclick="removeEvent(this, '${event.title}')">Remove Event</button>
-                      </div>
-                  `).join("");
+                        </div>
+                  ).join("");
               
           } catch (error) {
               eventsGrid.innerHTML = "Failed to load events.";
@@ -272,13 +271,7 @@ askUserIdentity();
     window.open("https://chat.whatsapp.com/JACrnM0SZFTBtfz1oBK18H", "_blank");
 }
 
-      
-      function removeEvent(button, title) {
-          const removedEvents = JSON.parse(localStorage.getItem("removedEvents")) || [];
-          removedEvents.push(title);
-          localStorage.setItem("removedEvents", JSON.stringify(removedEvents));
-          button.parentElement.remove();
-      }
+     
       
       window.onload = loadEvents;
     </script>
