@@ -183,43 +183,48 @@ body::before {
 
 <script>
     async function saveEvent(event) {
-        event.preventDefault();
+    event.preventDefault();
 
-        // Get form values
-        const eventData = {
-            title: document.getElementById("title").value,
-            date: document.getElementById("date").value,
-            time: document.getElementById("time").value,
-            location: document.getElementById("location").value,
-            sport: document.getElementById("sport").value,
-            participants: document.getElementById("participants").value,
-            contact: document.getElementById("contact").value,
-            description: document.getElementById("description").value
-        };
+    // Get form values
+    const eventData = {
+        action: "addEvent", // ✅ Add this action field
+        title: document.getElementById("title").value,
+        date: document.getElementById("date").value,
+        time: document.getElementById("time").value,
+        location: document.getElementById("location").value,
+        sport: document.getElementById("sport").value,
+        participants: document.getElementById("participants").value,
+        contact: document.getElementById("contact").value,
+        description: document.getElementById("description").value
+    };
 
-        // Validation
-        if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
-            alert("Please enter a valid phone number or email.");
-            return;
-        }
-
-        // 🔴Google Apps Script URL
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbxvc4a5Ut6XF7BGOTt_tARRQKPqaeEgq-S8LehZrT_QQerr5VRJYEoEHLUHTNRLY8D9/exec";
-
-        try {
-            const response = await fetch(scriptUrl, {
-                method: "POST",
-                body: JSON.stringify(eventData)
-            });
-
-            if (response.ok) {
-                alert("Event Created Successfully!");
-                window.location.href = "event1.html";
-            }
-        } catch (error) {
-            alert("Error saving event. Check your internet connection.");
-        }
+    // Validation
+    if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
+        alert("Please enter a valid phone number or email.");
+        return;
     }
+
+    // 🔴Google Apps Script URL
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbxvc4a5Ut6XF7BGOTt_tARRQKPqaeEgq-S8LehZrT_QQerr5VRJYEoEHLUHTNRLY8D9/exec";
+
+    try {
+        const response = await fetch(scriptUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }, // ✅ Added headers
+            body: JSON.stringify(eventData)
+        });
+
+        if (response.ok) {
+            alert("Event Created Successfully!");
+            window.location.href = "event1.html";
+        } else {
+            alert("Error saving event.");
+        }
+    } catch (error) {
+        alert("Error saving event. Check your internet connection.");
+    }
+}
+
     </script>
 </head>
 <body>
