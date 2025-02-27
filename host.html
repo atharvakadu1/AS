@@ -205,14 +205,14 @@ body::before {
     }
 
     // 🔴Google Apps Script URL
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxvc4a5Ut6XF7BGOTt_tARRQKPqaeEgq-S8LehZrT_QQerr5VRJYEoEHLUHTNRLY8D9/exec";
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyljSjKcNqSdHPwpL0LBGXjzUhKo6uyxQL857JlSGKR7NhYez-48Q7cbJen2Dl0DNhQ/exec";
 
     try {
         const response = await fetch(scriptUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" }, // ✅ Added headers
-            body: JSON.stringify(eventData)
-        });
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" }, // Use form-urlencoded instead of JSON
+    body: new URLSearchParams(eventData) // Convert JSON to URL params
+});
 
         if (response.ok) {
             alert("Event Created Successfully!");
