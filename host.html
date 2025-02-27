@@ -4,290 +4,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Host an Event - Active Sphere</title>
-        <style>
-        /* Global Styles */
+    <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             background: #121212;
             color: #e0e0e0;
-        }
-
-body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: -1;
-        background: linear-gradient(
-            rgba(18, 18, 18, 0.7),
-            rgba(18, 18, 18, 0.7)
-          ),
-          url("https://media.istockphoto.com/id/1491344667/vector/blue-and-pink-abstract-blurred-cloudy-background.jpg?s=612x612&w=0&k=20&c=vRM87uuHX90NTTLjUStIoso527ZZKACawl22VbpHoMY=");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-      }
-        
-        header {
-            background: #000;
-            padding: 1rem 2rem;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 65px;
-        }
-        
-        .logo img {
-            height: 80px;
-            width: auto;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 1.2rem;
             margin: 0;
             padding: 0;
         }
-        
-        nav a {
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            color: #e0e0e0;
-            background: rgba(255, 255, 255, 0.08);
-            transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
-        }
-        
-        nav a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            transform: scale(1.05);
-        }
 
-        /* Host Event Specific Styles */
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        h1 {
+        header {
+            background: #000;
+            padding: 1rem;
             text-align: center;
-            color: white;
-            margin-bottom: 2rem;
         }
 
-        .form-container {
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
             background: rgba(255, 255, 255, 0.1);
             padding: 2rem;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
+            margin-top: 1rem;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #333;
+            padding: 0.5rem;
+            margin-top: 0.3rem;
             border-radius: 4px;
-            background: rgba(255, 255, 255, 0.1);
+            background: #333;
             color: white;
-            font-size: 1rem;
-        }
-
-        /* Dropdown Styling */
-        select {
-            appearance: none; /* Remove default arrow */
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.8rem center;
-            background-size: 1.2rem;
-        }
-
-        select option {
-            background: #333; /* Background color for dropdown options */
-            color: white; /* Font color for dropdown options */
-        }
-
-        select option:hover {
-            background: #6a11cb; /* Hover background color */
-            color: white; /* Hover font color */
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            border: 1px solid #666;
         }
 
         button {
+            margin-top: 1rem;
+            padding: 0.7rem;
+            width: 100%;
             background: #6a11cb;
             color: white;
-            padding: 1rem 2rem;
             border: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            width: 100%;
             cursor: pointer;
-            transition: background 0.3s ease;
         }
 
         button:hover {
             background: #2575fc;
         }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            background: #000;
-            color: white;
-            margin-top: 2rem;
-        }
-
-        /* Custom Input for "Other" Option */
-        .custom-activity {
-            display: none;
-            margin-top: 1rem;
-        }
-
-        .custom-activity input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #333;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-        }
     </style>
-
-<script>
-    async function saveEvent(event) {
-    event.preventDefault();
-
-    // Get form values
-    const eventData = {
-        action: "addEvent", // ✅ Add this action field
-        title: document.getElementById("title").value,
-        date: document.getElementById("date").value,
-        time: document.getElementById("time").value,
-        location: document.getElementById("location").value,
-        sport: document.getElementById("sport").value,
-        participants: document.getElementById("participants").value,
-        contact: document.getElementById("contact").value,
-        description: document.getElementById("description").value
-    };
-
-    // Validation
-    if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
-        alert("Please enter a valid phone number or email.");
-        return;
-    }
-
-    // 🔴Google Apps Script URL
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyljSjKcNqSdHPwpL0LBGXjzUhKo6uyxQL857JlSGKR7NhYez-48Q7cbJen2Dl0DNhQ/exec";
-
-    try {
-        const response = await fetch(scriptUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" }, // Use form-urlencoded instead of JSON
-    body: new URLSearchParams(eventData) // Convert JSON to URL params
-});
-
-        if (response.ok) {
-            alert("Event Created Successfully!");
-            window.location.href = "event1.html";
-        } else {
-            alert("Error saving event.");
-        }
-    } catch (error) {
-        alert("Error saving event. Check your internet connection.");
-    }
-}
-
-    </script>
 </head>
 <body>
     <header>
-      <nav>
-        <div class="logo">
-            <img src="https://github.com/atharvakadu1/ActiveSphere/blob/main/logo1.jpg?raw=true" alt="Active Sphere Logo">
-        </div>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="host.html">Host an Event</a></li>
-            <li><a href="event1.html">Find Events</a></li>
-        </ul>
-    </nav>
+        <h1>Host an Event</h1>
     </header>
 
-    <main class="container">
-        <h1>Host an Event</h1>
-        <div class="form-container">
-            <form onsubmit="saveEvent(event)">
-                <label for="title">Event Title</label>
-                <input type="text" id="title" required>
-        
-                <label for="date">Date</label>
-                <input type="date" id="date" required>
-        
-                <label for="time">Time</label>
-                <input type="time" id="time" required>
-        
-                <label for="location">Location</label>
-                <input type="text" id="location" required>
-                
-                <label for="sport">Sport/Activity</label>
-                <select id="sport" onchange="toggleCustomActivity()" required>
-                    <option value="cycling">Cycling</option>
-                    <option value="swimming">Swimming</option>
-                    <option value="cricket">Cricket</option>
-                    <option value="football">Football</option>
-                    <option value="basketball">Basketball</option>
-                    <option value="other">Other</option>
-                </select>
+    <div class="container">
+        <form id="eventForm">
+            <label for="title">Event Title</label>
+            <input type="text" id="title" required>
 
-                <div class="custom-activity">
-                    <label for="custom-activity">Specify Activity</label>
-                    <input type="text" id="custom-activity" placeholder="Enter your activity">
-                </div>
-        
-                <label for="participants">Maximum Participants</label>
-                <input type="number" id="participants" min="1" required>
+            <label for="date">Date</label>
+            <input type="date" id="date" required>
 
-                <label for="contact">Contact Details (Phone or Email)</label>
-                <input type="text" id="contact" placeholder="e.g., +1234567890 or email@example.com" required>
-        
-                <label for="description">Description</label>
-                <textarea id="description" rows="4" required></textarea>
-        
-                <button type="submit">Create Event</button>
-            </form>
-        </div>
-    </main>
+            <label for="time">Time</label>
+            <input type="time" id="time" required>
 
-    <footer>
-        <p>&copy; 2025 Active Sphere. All Rights Reserved.</p>
-    </footer>
+            <label for="location">Location</label>
+            <input type="text" id="location" required>
+
+            <label for="sport">Sport</label>
+            <select id="sport" required>
+                <option value="cycling">Cycling</option>
+                <option value="swimming">Swimming</option>
+                <option value="cricket">Cricket</option>
+                <option value="football">Football</option>
+                <option value="basketball">Basketball</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="participants">Max Participants</label>
+            <input type="number" id="participants" min="1" required>
+
+            <label for="contact">Contact (Phone or Email)</label>
+            <input type="text" id="contact" placeholder="e.g., +1234567890 or email@example.com" required>
+
+            <label for="description">Description</label>
+            <textarea id="description" rows="4" required></textarea>
+
+            <button type="submit">Create Event</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("eventForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const eventData = {
+                action: "addEvent",
+                title: document.getElementById("title").value,
+                date: document.getElementById("date").value,
+                time: document.getElementById("time").value,
+                location: document.getElementById("location").value,
+                sport: document.getElementById("sport").value,
+                participants: document.getElementById("participants").value,
+                contact: document.getElementById("contact").value,
+                description: document.getElementById("description").value
+            };
+
+            if (!eventData.contact.match(/^[\d\s\+\-\(\)]+$/) && !eventData.contact.includes("@")) {
+                alert("Please enter a valid phone number or email.");
+                return;
+            }
+
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbyXjPSphktowJQGvJXByv8UJb153YmpagGLdD1oUv2z5JC_K_fldizvxyDA7avIhBNf/exec";
+
+            try {
+                const response = await fetch(scriptUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(eventData)
+                });
+
+                const result = await response.json();
+                alert(result.message);
+                if (result.status === "success") window.location.href = "event1.html";
+            } catch (error) {
+                alert("Error saving event. Check your internet connection.");
+            }
+        });
+    </script>
 </body>
 </html>
